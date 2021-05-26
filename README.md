@@ -19,7 +19,7 @@ A VR 360 video player application that provides dynmaic options for 360 video to
 <br/>
 
 ## Demo Video ⭐
-
+![Alt Text](https://github.com/AmanBohra7/VR360VideoPlayer/blob/main/Demo/Demo.gif)
 
 
 
