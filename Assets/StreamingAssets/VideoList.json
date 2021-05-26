@@ -1,0 +1,37 @@
+{
+    "status": "SUCCESS",
+    "data": {
+        "device_id": "test",
+            "books": [
+                {
+                    "name": "Video01",
+                    "thumbnail_url": "https://i.ibb.co/fSbdYk0/video-01-thumbnail.png"
+                },
+                {
+                    "name": "Video02",
+                    "thumbnail_url": ""
+                },
+                {
+                    "name": "Video03",
+                    "thumbnail_url": ""
+                },
+                {
+                    "name": "Video 4",
+                    "thumbnail_url": ""
+                },
+                {
+                    "name": "Video 5",
+                    "thumbnail_url": ""
+                },
+                {
+                    "name": "Video 6",
+                    "thumbnail_url": ""
+                },
+                {
+                    "name": "Video 7",
+                    "thumbnail_url": ""
+                }
+
+            ]
+    }
+}
