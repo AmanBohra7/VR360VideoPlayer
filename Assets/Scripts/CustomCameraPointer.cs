@@ -1,28 +1,7 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="CameraPointer.cs" company="Google LLC">
-// Copyright 2020 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-// </copyright>
-//-----------------------------------------------------------------------
-
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary>
-/// Sends messages to gazed GameObject.
-/// </summary>
 public class CustomCameraPointer : MonoBehaviour
 {
     private const float _maxDistance = 50;
@@ -31,29 +10,22 @@ public class CustomCameraPointer : MonoBehaviour
     public Image blueSection;
     private bool pointerActive = false;
 
-    private bool optionSelected = false;
+    private GameObject gazedAt;
 
-
-    /// <summary>
-    /// Update is called once per frame.
-    /// </summary>
     public void Update()
     {
         
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.forward, out hit, _maxDistance) )
+        // raycast hit for hitting buttons 
+        if (Physics.Raycast(transform.position, transform.forward, out hit, _maxDistance)  )
         {
             if(!pointerActive) StartCoroutine(startAnim("active"));
-            if(optionSelected){
-                optionSelected = false;
-                print(hit.collider.gameObject.tag);
-                hit.collider.gameObject.GetComponentInParent<Button>().onClick.Invoke();
-            }
+            gazedAt = hit.collider.gameObject;
 
         }else{
             
             if(pointerActive) StartCoroutine(startAnim("unactive"));
-
+            gazedAt = null;
         }
     }
 
@@ -62,18 +34,21 @@ public class CustomCameraPointer : MonoBehaviour
 
         yield return new WaitForSeconds(0);
 
+        // animtion time for the cirlce to be enlarged
         float animTime = .5f;
 
+        // increase the size aniation for the center marker when object is on target
         if(state=="active"){
             blueSection.gameObject.SetActive(true);
             blueSection.fillAmount = 0;
-            LeanTween.scale(pointer.GetComponent<RectTransform>(),new Vector3(.4f,.4f,.4f),animTime).setEaseOutQuint();
+            LeanTween.scale(pointer.GetComponent<RectTransform>(),new Vector3(.25f,.25f,.25f),animTime).setEaseOutQuint();
             LeanTween.value(gameObject,UpdateFilledValue,0,1,1.5f).setDelay(animTime);
             pointerActive = true;
         }
             
+        //  decrease the size aniation for the center marker when object is not on target
         if(state=="unactive"){
-            LeanTween.scale(pointer.GetComponent<RectTransform>(),new Vector3(.2f,.2f,.2f),animTime);
+            LeanTween.scale(pointer.GetComponent<RectTransform>(),new Vector3(.1f,.1f,.1f),animTime);
             blueSection.gameObject.SetActive(false);
             pointerActive = false;
             LeanTween.cancel(gameObject);
@@ -83,12 +58,18 @@ public class CustomCameraPointer : MonoBehaviour
     }
 
 
+    // helper function for the leantween to incrase the fill amount | filling the circle animation 
     void UpdateFilledValue(float val, float ratio){
-        if(optionSelected) return;
+
+        if(blueSection.fillAmount == 1) return;
+
         blueSection.fillAmount = val;
+
         if(blueSection.fillAmount == 1){
-            optionSelected = true;
+            gazedAt.GetComponentInParent<Button>().onClick.Invoke();
+            return;
         }
+
     }
 
 

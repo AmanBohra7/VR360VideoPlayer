@@ -14,6 +14,8 @@ public class FileLoader : MonoBehaviour
     // public TextMeshProUGUI errorText;
     // public TextMeshProUGUI latestText;
 
+    public SceneController instance;
+
     public GameObject content;
     public GameObject videoOption;
     List<GameObject> videos;
@@ -30,6 +32,9 @@ public class FileLoader : MonoBehaviour
     }
 
     void Start(){
+
+        instance = SceneController.Instance;
+
         videos = new List<GameObject>();
         // content.SetActive(false);
         ReadTheData();
@@ -66,12 +71,6 @@ public class FileLoader : MonoBehaviour
 
         string jsonData = File.ReadAllText(filePath);
         GenerateOptions(jsonData);
-        // dataText.text = jsonData;
-
-        // SimpleJSON.JSONNode test = SimpleJSON.JSON.Parse(jsonData);
-        // Debug.Log(test["data"]["books"][0]);
-
-        // latestText.text =  test["data"]["books"][0].ToString();
     }
 
     private void GenerateOptions(string videoList){
@@ -79,27 +78,58 @@ public class FileLoader : MonoBehaviour
         SimpleJSON.JSONNode jsonData = SimpleJSON.JSON.Parse(videoList);
     
         for(int i = 0 ; i < jsonData["data"]["books"].Count ; ++i){
-            Debug.Log(jsonData["data"]["books"][i]);
+            // Debug.Log(jsonData["data"]["books"][i]);
+            
+            string video_name = jsonData["data"]["books"][i]["name"];
+            string video_url = jsonData["data"]["books"][i]["thumbnail_url"];
+
+            //  instantiate video option
             GameObject tmp = Instantiate(videoOption,Vector3.zero,Quaternion.identity,content.transform);
-            tmp.GetComponentInChildren<TextMeshProUGUI>().text = jsonData["data"]["books"][i]["name"];
+
+            // setting name of video 
+            tmp.GetComponentInChildren<TextMeshProUGUI>().text = video_name;
+
+            // uploading thumbnail image from url of video option 
+            StartCoroutine(loadThumbnail(tmp,video_url));
+
+
+            // adding button onlick listner to the image
+            tmp.GetComponent<Button>().onClick.AddListener(delegate { instance.OnVideoSelected(video_name); } );
+
             videos.Add(tmp);
         }
 
-        GameObject test = videos[0];
-        StartCoroutine(
-            loadImage(test,jsonData["data"]["books"][0]["thumbnail_url"])
-        );
+
+    }
+
+    IEnumerator loadThumbnail(GameObject tmp,string url){
+
+        using(UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(url)){
+            yield return uwr.SendWebRequest();
+            if(uwr.isNetworkError || uwr.isHttpError) Debug.Log(uwr.error);
+            else{
+                Debug.Log("Image is downloaded!");
+                Texture tmpTexture = DownloadHandlerTexture.GetContent(uwr);
+                byte[] result = uwr.downloadHandler.data;
+                tmp.GetComponent<RawImage>().texture = tmpTexture;
+            }
+        }
 
     }
 
 
-    IEnumerator loadImage(GameObject image,string url){
-
-        UnityWebRequest request = UnityWebRequestTexture.GetTexture(url);
-        yield return request.SendWebRequest();
-        if(request.isNetworkError || request.isHttpError) 
-            Debug.Log(request.error);
-        else
-            image.GetComponent<RawImage>().texture = ((DownloadHandlerTexture) request.downloadHandler).texture;
-    }
 }
+
+
+
+
+// IEnumerator loadImage(GameObject image,string url){
+//     UnityWebRequest request = UnityWebRequestTexture.GetTexture(url);
+//     print("before request!");
+//     yield return request.SendWebRequest();
+//     print("after request!");
+//     if(request.isNetworkError || request.isHttpError) 
+//         Debug.Log(request.error);
+//     else
+//         image.GetComponent<RawImage>().texture = ((DownloadHandlerTexture) request.downloadHandler).texture;
+// }

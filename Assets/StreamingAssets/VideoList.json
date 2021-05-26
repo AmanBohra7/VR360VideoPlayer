@@ -5,31 +5,11 @@
             "books": [
                 {
                     "name": "Video01",
-                    "thumbnail_url": "https://raw.githubusercontent.com/AmanBohra7/VR360VideoPlayer/main/Images/video_01_thumbnail.png"
+                    "thumbnail_url": "https://raw.githubusercontent.com/AmanBohra7/VR360VideoPlayer/main/Images/video_01_thumbnail.jpg"
                 },
                 {
                     "name": "Video02",
-                    "thumbnail_url": "https://github.com/AmanBohra7/VR360VideoPlayer/blob/main/Images/video_02_thumbnail.png"
-                },
-                {
-                    "name": "Video03",
-                    "thumbnail_url": ""
-                },
-                {
-                    "name": "Video 4",
-                    "thumbnail_url": ""
-                },
-                {
-                    "name": "Video 5",
-                    "thumbnail_url": ""
-                },
-                {
-                    "name": "Video 6",
-                    "thumbnail_url": ""
-                },
-                {
-                    "name": "Video 7",
-                    "thumbnail_url": ""
+                    "thumbnail_url": "https://raw.githubusercontent.com/AmanBohra7/VR360VideoPlayer/main/Images/video_02_thumbnail.jpg"
                 }
 
             ]
