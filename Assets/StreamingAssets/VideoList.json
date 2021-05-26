@@ -10,6 +10,14 @@
                 {
                     "name": "Video02",
                     "thumbnail_url": "https://raw.githubusercontent.com/AmanBohra7/VR360VideoPlayer/main/Images/video_02_thumbnail.jpg"
+                },
+                {
+                    "name": "Video03",
+                    "thumbnail_url": "https://raw.githubusercontent.com/AmanBohra7/VR360VideoPlayer/main/Images/video_03_thumbnail.jpg"
+                },
+                {
+                    "name": "Video04",
+                    "thumbnail_url": "https://raw.githubusercontent.com/AmanBohra7/VR360VideoPlayer/main/Images/video_04_thumbnail.jpg"
                 }
 
             ]

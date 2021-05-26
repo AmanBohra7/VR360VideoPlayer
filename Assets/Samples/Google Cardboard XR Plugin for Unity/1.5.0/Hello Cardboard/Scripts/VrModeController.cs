@@ -27,6 +27,13 @@ using UnityEngine.XR.Management;
 /// </summary>
 public class VrModeController : MonoBehaviour
 {
+
+    private static bool isTouched = false;
+
+    public void BtnPressed(){
+        isTouched = true;
+    }
+
     /// <summary>
     /// Gets a value indicating whether the screen has been touched this frame.
     /// </summary>
@@ -68,6 +75,8 @@ public class VrModeController : MonoBehaviour
         {
             Api.ScanDeviceParams();
         }
+
+        EnterVR();
     }
 
     /// <summary>
@@ -105,10 +114,10 @@ public class VrModeController : MonoBehaviour
     private void EnterVR()
     {
         StartCoroutine(StartXR());
-        if (Api.HasNewDeviceParams())
-        {
-            Api.ReloadDeviceParams();
-        }
+        // if (Api.HasNewDeviceParams())
+        // {
+        //     Api.ReloadDeviceParams();
+        // }
     }
 
     /// <summary>
