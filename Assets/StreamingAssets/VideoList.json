@@ -5,11 +5,11 @@
             "books": [
                 {
                     "name": "Video01",
-                    "thumbnail_url": "https://i.ibb.co/fSbdYk0/video-01-thumbnail.png"
+                    "thumbnail_url": "https://raw.githubusercontent.com/AmanBohra7/VR360VideoPlayer/main/Images/video_01_thumbnail.png"
                 },
                 {
                     "name": "Video02",
-                    "thumbnail_url": ""
+                    "thumbnail_url": "https://github.com/AmanBohra7/VR360VideoPlayer/blob/main/Images/video_02_thumbnail.png"
                 },
                 {
                     "name": "Video03",
