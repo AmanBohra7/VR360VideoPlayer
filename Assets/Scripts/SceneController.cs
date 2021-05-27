@@ -6,8 +6,10 @@ using UnityEngine.SceneManagement;
 
 public class SceneController : MonoBehaviour{
    
+    // Singleton instance of SceneController
     public static SceneController Instance;
 
+    // static value to be used over both scene to get which is the selected video option
     public static string SELECTED_VIDEO = null;
 
     void Awake(){
@@ -19,8 +21,7 @@ public class SceneController : MonoBehaviour{
 	    }
         DontDestroyOnLoad(gameObject);
     }
-
-    // public GameObject content;
+    
     [HideInInspector]
     public List<GameObject> options;
 
@@ -28,6 +29,9 @@ public class SceneController : MonoBehaviour{
         options = new List<GameObject>();
     }
 
+    /// <summary>
+    /// Function triggered by the video options in menu to load next scene with the selected video
+    /// </summary>
     public void OnVideoSelected(string selectedVideo){
         Debug.Log("Selected video name: "+selectedVideo);
         SELECTED_VIDEO = selectedVideo;

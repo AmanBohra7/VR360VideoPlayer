@@ -7,12 +7,11 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
+///<summary>
+/// Loading JSON file and generateing MENU section
+///</summary>
 public class FileLoader : MonoBehaviour
 {   
-    // public TextMeshProUGUI dataText;
-    // public TextMeshProUGUI filePathText;
-    // public TextMeshProUGUI errorText;
-    // public TextMeshProUGUI latestText;
 
     public SceneController instance;
 
@@ -25,9 +24,8 @@ public class FileLoader : MonoBehaviour
 
     void Awake(){
         #if UNITY_ANDROID
-            Debug.Log("TEST");
             filePath = System.IO.Path.Combine(Application.streamingAssetsPath, "VideoList.json");
-            StartCoroutine(Example());   
+            StartCoroutine(CopyJsonToPersistent());   
         #endif   
     }
 
@@ -36,14 +34,17 @@ public class FileLoader : MonoBehaviour
         instance = SceneController.Instance;
 
         videos = new List<GameObject>();
-        // content.SetActive(false);
-        ReadTheData();
+
+        ReadJSON();
     }
 
-    IEnumerator Example() 
+
+    /// <summary>
+    /// Copy the json file placed in the StreamingAssets folder to a accessable folder for Android application
+    /// </summary>
+    IEnumerator CopyJsonToPersistent() 
     {
         filePath = Path.Combine(Application.streamingAssetsPath + "/", "VideoList.json");
-        // filePathText.text = filePath;
       
         if (filePath.Contains(": //") || filePath.Contains (":///")) 
         {
@@ -54,15 +55,17 @@ public class FileLoader : MonoBehaviour
     
         else {
             result = File.ReadAllText(filePath);
-            // errorText.text = "In else section!";
         }
        
         File.WriteAllText(Application.persistentDataPath + "/VideoList.json", result);
-        // dataText.text = result;
+
     }
 
 
-    public void ReadTheData(){
+    /// <summary>
+    /// Read the json data from particular path and call for options to be placed in the menu
+    /// </summary>
+    public void ReadJSON(){
         #if UNITY_ANDROID
             filePath = Application.persistentDataPath + "/VideoList.json";
         #else
@@ -73,6 +76,10 @@ public class FileLoader : MonoBehaviour
         GenerateOptions(jsonData);
     }
 
+
+    /// <summary>
+    /// Dynmaically load options in the content section with provided videos in the json file
+    /// </summary>
     private void GenerateOptions(string videoList){
 
         SimpleJSON.JSONNode jsonData = SimpleJSON.JSON.Parse(videoList);
@@ -83,26 +90,29 @@ public class FileLoader : MonoBehaviour
             string video_name = jsonData["data"]["books"][i]["name"];
             string video_url = jsonData["data"]["books"][i]["thumbnail_url"];
 
-            //  instantiate video option
+            //  instantiate video option for ith entry in the json file 
             GameObject tmp = Instantiate(videoOption,Vector3.zero,Quaternion.identity,content.transform);
 
-            // setting name of video 
+            // updating name of video in TextMeshPro test under video 
             tmp.GetComponentInChildren<TextMeshProUGUI>().text = video_name;
 
             // uploading thumbnail image from url of video option 
             StartCoroutine(loadThumbnail(tmp,video_url));
 
-
             // adding button onlick listner to the image
             tmp.GetComponent<Button>().onClick.AddListener(delegate { instance.OnVideoSelected(video_name); } );
 
+            // adding video option in the list
             videos.Add(tmp);
         }
 
 
     }
 
-    IEnumerator loadThumbnail(GameObject tmp,string url){
+    /// <summary>
+    /// Load thumbnail by downloading the texture and set the texture to the obj image
+    /// </summary>
+    IEnumerator loadThumbnail(GameObject obj,string url){
 
         using(UnityWebRequest uwr = UnityWebRequestTexture.GetTexture(url)){
             yield return uwr.SendWebRequest();
@@ -111,7 +121,7 @@ public class FileLoader : MonoBehaviour
                 Debug.Log("Image is downloaded!");
                 Texture tmpTexture = DownloadHandlerTexture.GetContent(uwr);
                 byte[] result = uwr.downloadHandler.data;
-                tmp.GetComponent<RawImage>().texture = tmpTexture;
+                obj.GetComponent<RawImage>().texture = tmpTexture;
             }
         }
 
@@ -120,16 +130,5 @@ public class FileLoader : MonoBehaviour
 
 }
 
-
-
-
-// IEnumerator loadImage(GameObject image,string url){
-//     UnityWebRequest request = UnityWebRequestTexture.GetTexture(url);
-//     print("before request!");
-//     yield return request.SendWebRequest();
-//     print("after request!");
-//     if(request.isNetworkError || request.isHttpError) 
-//         Debug.Log(request.error);
-//     else
-//         image.GetComponent<RawImage>().texture = ((DownloadHandlerTexture) request.downloadHandler).texture;
-// }
+// Future changes 
+// In loadThumnail instead of downloding image again an again we can save it in a folder to load it again whenever needed!

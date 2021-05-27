@@ -19,22 +19,22 @@ public class CustomCameraPointer : MonoBehaviour
         // raycast hit for hitting buttons 
         if (Physics.Raycast(transform.position, transform.forward, out hit, _maxDistance)  )
         {
-            if(!pointerActive) StartCoroutine(startAnim("active"));
+            if(!pointerActive) StartCoroutine(CursorAnim("active"));
             gazedAt = hit.collider.gameObject;
 
         }else{
             
-            if(pointerActive) StartCoroutine(startAnim("unactive"));
+            if(pointerActive) StartCoroutine(CursorAnim("unactive"));
             gazedAt = null;
         }
     }
 
 
-    IEnumerator startAnim(string state){
+    IEnumerator CursorAnim(string state){
 
         yield return new WaitForSeconds(0);
 
-        // animtion time for the cirlce to be enlarged
+        // animtion time for the cursor
         float animTime = .5f;
 
         // increase the size aniation for the center marker when object is on target
@@ -65,7 +65,9 @@ public class CustomCameraPointer : MonoBehaviour
 
         blueSection.fillAmount = val;
 
+        // perform the befow task when the fill amount of the blue circle is completed | selection animation 
         if(blueSection.fillAmount == 1){
+            // Inovking the onclick event on the btn currently selected 
             gazedAt.GetComponentInParent<Button>().onClick.Invoke();
             return;
         }
